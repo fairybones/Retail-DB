@@ -1,7 +1,7 @@
 // import sequelize connection
-const express = require('express');
+const express = require("express");
 // import all routes
-const routes = require('./routes');
+const routes = require("./routes");
 
 // initialize express.js server
 const app = express();
@@ -12,6 +12,7 @@ const PORT = process.env.PORT || 3001;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// use routes defined in the routes folder
 app.use(routes);
 
 // sync sequelize models to the database, then turn on the server
