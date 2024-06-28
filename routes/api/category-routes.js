@@ -6,12 +6,12 @@ const { Category, Product } = require("../../models");
 // all categories & associated products
 router.get("/", async (req, res) => {
   try {
-    const fetchAll = await Category.findAll(req, {
+    const fetchAll = await Category.findAll({
       include: [{ model: Product }],
     });
-    res.json(fetchAll);
-    //res.render ?
+    res.status(200).json(fetchAll);
   } catch (err) {
+    console.log(err);
     res.status(500).json(err);
   }
 });
@@ -25,8 +25,7 @@ router.get("/:id", async (req, res) => {
     if (!findCategory) {
       return res.status(404).json({ message: "Category not found" });
     }
-
-    res.json(findCategory);
+    res.status(200).json(findCategory);
   } catch (err) {
     res.status(500).json(err);
   }
@@ -35,11 +34,10 @@ router.get("/:id", async (req, res) => {
 // create a new category
 router.post("/", async (req, res) => {
   try {
-    const newCategory = await Category.create({
-      name: req.body.categoryName,
-    });
+    const newCategory = await Category.create(req.body);
     res.status(200).json(newCategory);
   } catch (err) {
+    console.log(err);
     res.status(500).json(err);
   }
 });
@@ -47,12 +45,18 @@ router.post("/", async (req, res) => {
 // update an existing category by id
 router.put("/:id", async (req, res) => {
   try {
-    const editCategory = await Category.update(
-        { name: req.body.categoryName },
-        { where: { id: req.params.id }}
-    );
+    const editCategory = await Category.update(req.body.categoryName, {
+      where: {
+        id: req.params.id,
+      },
+    });
+    if (!editCategory[0]) {
+      res.status(404).json({ message: "Category requested does not exist." });
+      return;
+    }
     res.status(200).json(editCategory);
   } catch (err) {
+    console.log(err);
     res.status(500).json(err);
   }
 });
@@ -61,8 +65,12 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   try {
     const rmCategory = await Category.destroy({
-        where: { id: req.params.id },
+      where: { id: req.params.id },
     });
+    if (!rmCategory) {
+      res.status(404).json({ message: "No category found matching that id." });
+      return;
+    }
     res.status(200).json(rmCategory);
   } catch (err) {
     res.status(500).json(err);

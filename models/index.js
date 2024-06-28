@@ -6,10 +6,6 @@ const ProductTag = require("./productTag.js");
 // const sequelize = require("../config/connection.js");
 
 // sequelize associations
-// const A = sequelize.define("A", require("./category.js"));
-// const B = sequelize.define("B", require("./product.js"));
-// const C = sequelize.define("C", require("./productTag.js"));
-// const D = sequelize.define("D", require("./tag.js"));
 
 // Products belongsTo Category
 // B.belongsTo(A);
